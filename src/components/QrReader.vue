@@ -7,6 +7,7 @@ const error = ref("")
 
 function onDecode(result) {
   result.value = result
+  alert(1)
 }
 
 async function onInit(promise) {
@@ -39,7 +40,7 @@ async function onInit(promise) {
     <p class="error">{{ error }}</p>
 
     <p class="decode-result p-0">
-      Last result: <b>{{ result }}</b>
+      Last results: <b>{{ result }}</b>
     </p>
 
     <qrcode-stream @decode="onDecode" @init="onInit" />
