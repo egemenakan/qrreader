@@ -1,54 +1,30 @@
 <script setup>
 import { ref } from "vue"
-import { QrcodeStream } from "vue3-qrcode-reader"
+import { StreamBarcodeReader } from "vue-barcode-reader"
 
-const result = ref("")
-const error = ref("")
+const decodedText = ref("")
 
-function onDecode(result) {
-  result.value = result
-  alert(1)
+const onLoaded = () => {
+  console.log("loaded")
 }
 
-async function onInit(promise) {
-  try {
-    await promise
-  } catch (error) {
-    if (error.value.name === "NotAllowedError") {
-      error.value = "ERROR: you need to grant camera access permission"
-    } else if (error.value.name === "NotFoundError") {
-      error.value = "ERROR: no camera on this device"
-    } else if (error.value.name === "NotSupportedError") {
-      error.value = "ERROR: secure context required (HTTPS, localhost)"
-    } else if (error.value.name === "NotReadableError") {
-      error.value = "ERROR: is the camera already in use?"
-    } else if (error.value.name === "OverconstrainedError") {
-      error.value = "ERROR: installed cameras are not suitable"
-    } else if (error.value.name === "StreamApiNotSupportedError") {
-      error.value = "ERROR: Stream API is not supported in this browser"
-    } else if (error.value.name === "InsecureContextError") {
-      error.value = "ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP."
-    } else {
-      error.value = `ERROR: Camera error (${error.value.name})`
-    }
-  }
+const onDecode = (text) => {
+  decodedText.value = text
+  console.log(text)
 }
 </script>
 
 <template>
-  <div>
-    <p class="error">{{ error }}</p>
-
-    <p class="decode-result p-0">
-      Last results: <b>{{ result }}</b>
-    </p>
-
-    <qrcode-stream @decode="onDecode" @init="onInit" />
-  </div>
+  <StreamBarcodeReader class="w-96" @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>
+  <h2>The decoded value in QR/barcode is</h2>
+  <h2>{{ decodedText }}</h2>
 </template>
+
 <style scoped>
-.error {
-  font-weight: bold;
-  color: red;
+a {
+  color: #42b983;
+}
+.information {
+  margin-top: 100px;
 }
 </style>
